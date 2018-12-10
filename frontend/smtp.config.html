@@ -1,0 +1,147 @@
+<div layout="column" layout-padding ng-cloak>
+
+    <!-- provider selector -->
+    <md-list ng-cloak>
+        <md-subheader class="md-no-sticky">Email provider</md-subheader>
+        <md-list-item>
+            <md-icon md-svg-icon="chevron-right" class="md-avatar"></md-icon>
+            <p>Choose your email provider</p>
+            <div class="md-secondary">
+                <md-select ng-model="smtpCtl.provider" placeholder="Email providers">
+                    <md-option ng-repeat="provider in smtpCtl.providers" ng-value="provider">{{provider.label}}</md-option>
+                </md-select>
+            </div>
+        </md-list-item>
+
+        <!-- instructions -->
+        <md-list-item ng-if="smtpCtl.provider.key==='gmail'" class="md-3-line md-long-text no-margin">
+            <img mod-img-src="res/gmail.png" class="md-avatar"/>
+            <div class="md-list-item-text">
+                <h3>Google Gmail account access configuration:</h3>
+                <p>
+                Fill your login and password from your google account to use it.<br>
+                If you have two-factor authentication enabled please generate a application password <a href="https://security.google.com/settings/security/apppasswords" target="_blank">here</a> and use it below
+                </p>
+            </div>
+        </md-list-item>
+        <md-list-item ng-if="smtpCtl.provider.key==='yahoo'" class="md-3-line md-long-text no-margin">
+            <img mod-img-src="res/yahoomail.png" class="md-avatar"/>
+            <div class="md-list-item-text">
+                <h3>Yahoo! Mail account access configuration:</h3>
+                <p>
+                Fill your login and password from your Yahoo! account to use it.<br>
+                If you have two-factor authentication enabed please follow this <a href="https://help.yahoo.com/kb/SLN15241.html" target="_blank">page</a> and use generated password below.
+                </p>
+            </div>
+        </md-list-item>
+        <md-list-item ng-if="smtpCtl.provider.key==='custom'" class="md-3-line md-long-text no-margin">
+            <md-icon md-svg-icon="email-outline" class="md-avatar"></md-icon>
+            <div class="md-list-item-text">
+                <h3>Custom email provider configuration:</h3>
+                <p>
+                Fill fields below to use your own mail server.
+                </p>
+            </div>
+        </md-list-item>
+
+        <!-- configuration -->
+        <md-subheader class="md-no-sticky">Configuration</md-subheader>
+        <md-list-item ng-if="smtpCtl.provider.key==='custom'">
+            <md-icon md-svg-icon="chevron-right" class="md-avatar"></md-icon>
+            <p>Server address</p>
+            <div class="md-secondary">
+                <md-input-container class="no-margin" md-no-float>
+                    <input type="text" ng-model="smtpCtl.server" placeholder="Server address">
+                </md-input-container>
+            </div>
+        </md-list-item>
+        <md-list-item ng-if="smtpCtl.provider.key==='custom'">
+            <md-icon md-svg-icon="chevron-right" class="md-avatar"></md-icon>
+            <p>
+                Server port
+                <span class="md-caption"> (optional)</span>
+            </p>
+            <div class="md-secondary">
+                <md-input-container class="no-margin" md-no-float>
+                    <input type="text" ng-model="smtpCtl.port" placeholder="Server port">
+                </md-input-container>
+            </div>
+        </md-list-item>
+        <md-list-item ng-if="smtpCtl.provider.key==='custom'">
+            <md-icon md-svg-icon="chevron-right" class="md-avatar"></md-icon>
+            <p>Enabled secure connection ?</p>
+            <div class="md-secondary">
+                <md-checkbox ng-model="smtpCtl.tls" aria-label="TLS">TLS</md-checkbox>
+                <md-checkbox ng-model="smtpCtl.ssl" aria-label="SSL">SSL</md-checkbox>
+            </div>
+        </md-list-item>
+        <md-list-item>
+            <md-icon md-svg-icon="chevron-right" class="md-avatar"></md-icon>
+            <p>
+                Login
+                <span class="md-caption" ng-if="smtpCtl.provider.key==='custom'"> (optional)</span>
+            </p>
+            <div class="md-secondary">
+                <md-input-container class="no-margin" md-no-float>
+                    <input type="text" ng-model="smtpCtl.login" placeholder="Login">
+                </md-input-container>
+            </div>
+        </md-list-item>
+        <md-list-item>
+            <md-icon md-svg-icon="chevron-right" class="md-avatar"></md-icon>
+            <p>
+                Password
+                <span class="md-caption" ng-if="smtpCtl.provider.key==='custom'"> (optional)</span>
+            </p>
+            <div class="md-secondary">
+                <md-input-container class="no-margin" md-no-float>
+                    <input type="password" ng-model="smtpCtl.password" placeholder="Password">
+                </md-input-container>
+            </div>
+        </md-list-item>
+        <md-list-item ng-if="smtpCtl.provider.key==='custom'" class="md-2-line">
+            <md-icon md-svg-icon="chevron-right" class="md-avatar"></md-icon>
+            <div class="md-list-item-text">
+                <h3>
+                    Email sender
+                    <span class="md-caption"> (optional)</span>
+                </h3>
+                <p>Sometimes it is overwritten by server.</p>
+            </div>
+            <div class="md-secondary">
+                <md-input-container class="no-margin" md-no-float>
+                    <input type="text" ng-model="smtpCtl.sender" placeholder="Email sender">
+                </md-input-container>
+            </div>
+        </md-list-item>
+		<md-list-item>
+			<p></p>
+			<md-button class="md-secondary md-raised md-primary" ng-click="smtpCtl.setConfig()">
+                <md-icon md-svg-icon="content-save"></md-icon>
+                Save configuration
+            </md-button>
+		</md-list-item>
+
+        <!-- test -->
+        <md-subheader class="md-no-sticky">Test configuration</md-subheader>
+        <md-list-item class="md-2-line">
+            <md-icon md-svg-icon="chevron-right" class="md-avatar"></md-icon>
+			<div class="md-list-item-text">
+	            <h3>Email address to send test message to</h3>
+				<p>This email address is only used for testing and won't be saved</p>
+			</div>
+			<div class="md-secondary">
+				<md-input-container class="no-margin" md-no-float>
+                	<input ng-model="smtpCtl.recipient" aria="Test email" placeholder="Recipient">
+              	</md-input-container>
+                <md-button ng-click="smtpCtl.test()" class="md-raised md-primary">
+                	<md-icon md-svg-icon="email"></md-icon>
+                    Test
+              	</md-button>
+			</div>
+        </md-list-item>
+
+    </md-list>
+
+</div>
+
