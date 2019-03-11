@@ -25,7 +25,6 @@ var smtpConfigDirective = function(toast, smtpService, raspiotService) {
         {
             self.providers = config.providers;
             for(var i=0; i<self.providers.length; i++) {
-                console.log(''+config.provider+'=='+self.providers[i].key);
                 if(config.provider==self.providers[i].key) {
                     self.provider = self.providers[i];
                     break;
@@ -90,7 +89,6 @@ var smtpConfigDirective = function(toast, smtpService, raspiotService) {
             return self.provider
         }, function(newVal, oldVal) {
             if(newVal && oldVal && newVal.key!=oldVal.key) {
-                console.log(newVal, oldVal);
                 //erase inputs
                 self.server = '';
                 self.port = '';
