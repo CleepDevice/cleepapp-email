@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from raspiot.events.formatter import Formatter
-from raspiot.events.alertEmailProfile import AlertEmailProfile
+from raspiot.libs.internals.formatter import Formatter
+from raspiot.profiles.alertEmailProfile import AlertEmailProfile
 
 class AlertEmailSendToEmailFormatter(Formatter):
     """

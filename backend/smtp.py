@@ -4,7 +4,7 @@
 import logging
 from raspiot.raspiot import RaspIotRenderer
 from raspiot.utils import CommandError, MissingParameter
-from raspiot.events.alertEmailProfile import AlertEmailProfile
+from raspiot.profiles.alertEmailProfile import AlertEmailProfile
 import smtplib
 import mimetypes
 from email import encoders
