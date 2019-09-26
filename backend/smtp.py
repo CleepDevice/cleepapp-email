@@ -38,7 +38,7 @@ class Smtp(RaspIotRenderer):
 
     MODULE_CONFIG_FILE = u'smtp.conf'
     DEFAULT_CONFIG = {
-        u'provider': 'custom',
+        u'provider': u'custom',
         u'server': None,
         u'port': None,
         u'login': None,
@@ -49,7 +49,6 @@ class Smtp(RaspIotRenderer):
     }
 
     RENDERER_PROFILES = [AlertEmailProfile]
-    RENDERER_TYPE = u'alert.email'
 
     PROVIDERS = {
         u'gmail': {
@@ -85,16 +84,18 @@ class Smtp(RaspIotRenderer):
 
         Returns:
             dict: configuration::
+
                 {
-                    server: server address
-                    port: server port
-                    tls: TLS option
-                    ssl: SSL option
-                    login: server login
-                    sender: sender email address
-                    provider: configured provider
-                    providers: list of provider names
+                    server (string): server address
+                    port (int): server port
+                    tls (bool): TLS option
+                    ssl (bool): SSL option
+                    login (string): server login
+                    sender (string): sender email address
+                    provider (string): configured provider
+                    providers (list): list of provider names
                 }
+
         """
         config = self._get_config()
         config[u'providers'] = []
@@ -111,11 +112,11 @@ class Smtp(RaspIotRenderer):
 
         return config
 
-    def __send_email(self, server, port, login, password, tls, ssl, sender, data):
+    def _send_email(self, server, port, login, password, tls, ssl, sender, data):
         """
         Send test email
 
-        Params:
+        Args:
             server (string): smtp server address
             port (int): smtp server port
             login (string): login to connect to smtp server
@@ -237,7 +238,7 @@ class Smtp(RaspIotRenderer):
             self.logger.exception(u'Failed to send test:')
             raise Exception('Unable to send email. Please check configuration')
 
-    def __check_and_get_config(self, provider, server, port, login, password, tls, ssl, sender):
+    def _check_and_get_config(self, provider, server, port, login, password, tls, ssl, sender):
         """
         Check and get valid configuration
         """
@@ -267,7 +268,7 @@ class Smtp(RaspIotRenderer):
         """
         Set configuration
 
-        Params:
+        Args:
             server (string): smtp server address
             port (int): smtp server port
             login (string): login to connect to smtp server
@@ -280,7 +281,7 @@ class Smtp(RaspIotRenderer):
             bool: True if config saved successfully
         """
         #check parameters
-        (provider, server, port, login, password, tls, ssl, sender) = self.__check_and_get_config(provider, server, port, login, password, tls, ssl, sender)
+        (provider, server, port, login, password, tls, ssl, sender) = self._check_and_get_config(provider, server, port, login, password, tls, ssl, sender)
 
         #save config
         return self._update_config({
@@ -298,7 +299,7 @@ class Smtp(RaspIotRenderer):
         """
         Send test email
 
-        Params:
+        Args:
             recipient (string): email recipient for test
             provider (string): email provider
             server (string): smtp server address
@@ -316,7 +317,7 @@ class Smtp(RaspIotRenderer):
         if recipient is None or len(recipient)==0:
             raise CommandError(u'Recipient parameter is missing')
         config = self._get_config()
-        (provider, server, port, login, password, tls, ssl, sender) = self.__check_and_get_config(provider, server, port, login, password if password is not None else config[u'password'], tls, ssl, sender)
+        (provider, server, port, login, password, tls, ssl, sender) = self._check_and_get_config(provider, server, port, login, password if password is not None else config[u'password'], tls, ssl, sender)
 
         #prepare data
         data = AlertEmailProfile()
@@ -325,7 +326,7 @@ class Smtp(RaspIotRenderer):
         data.recipients.append(recipient)
 
         #send email
-        self.__send_email(server, port, login, password, tls, ssl, sender, data)
+        self._send_email(server, port, login, password, tls, ssl, sender, data)
 
         return True
 
@@ -333,7 +334,7 @@ class Smtp(RaspIotRenderer):
         """
         Render profile
 
-        Params:
+        Args:
             profile (EmailProfile): EmailProfile instance
 
         Returns:
@@ -343,10 +344,10 @@ class Smtp(RaspIotRenderer):
         if config[u'server'] is None or len(config[u'server'])==0:
             #not configured
             raise CommandError(u'Can\'t send email because module is not configured')
-        (provider, server, port, login, password, tls, ssl, sender) = self.__check_and_get_config(config[u'provider'], config[u'server'], config[u'port'], config[u'login'], config[u'password'], config[u'tls'], config[u'ssl'], config[u'sender'])
+        (provider, server, port, login, password, tls, ssl, sender) = self._check_and_get_config(config[u'provider'], config[u'server'], config[u'port'], config[u'login'], config[u'password'], config[u'tls'], config[u'ssl'], config[u'sender'])
 
         #send email
-        self.__send_email(server, port, login, password, tls, ssl, sender, profile)
+        self._send_email(server, port, login, password, tls, ssl, sender, profile)
 
         return True
 
