@@ -23,7 +23,7 @@ class Smtp(RaspIotRenderer):
     Smtp module
     """
     MODULE_AUTHOR = u'Cleep'
-    MODULE_VERSION = u'1.0.0'
+    MODULE_VERSION = u'1.1.0'
     MODULE_PRICE = 0
     MODULE_DEPS = []
     MODULE_DESCRIPTION = u'Sends you alerts by email.'
