@@ -8,10 +8,11 @@
 
 ## [1.1.0] - 2019-10-30
 
-### Fixed
-- General improvements
+### Updated
 
-## [1.0.0] - 2019-10-29
+- Update after core changes
+
+## [1.0.0] - 2018-12-10
 
 ### Added
 
