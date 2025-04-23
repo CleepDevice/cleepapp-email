@@ -1,7 +1,7 @@
 {
     "icon": "email",
     "config": {
-        "js": ["smtp.config.js", "smtp.service.js"],
-        "html": ["smtp.config.html"]
+        "js": ["email.config.js", "email.service.js"],
+        "html": ["email.config.html"]
     }
 }

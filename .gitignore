@@ -5,3 +5,4 @@ docs/*.txt
 docs/source
 docs/_build
 .vscode
+**/*.swp
