@@ -1,5 +1,6 @@
 {
     "icon": "email",
+    "global": {},
     "config": {
         "js": ["email.config.js", "email.service.js"],
         "html": ["email.config.html"]
