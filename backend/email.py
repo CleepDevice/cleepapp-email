@@ -154,9 +154,9 @@ class Email(CleepRenderer):
             subject (str): email subject
             content (str): email content. Html or text. Content will be always embedded in base html tags.
             recipient (str): coma separated recipients
-            cc (str, optional): coma separated carbon copy recipients. Defaults to None
-            bcc (str, optional): coma separated blind carbon copy recipients. Defaults to None
-            attachments (list, optional): list of attachments. Must be filepaths. Defaults to None::
+            cc (str, optional): coma separated carbon copy recipients. Defaults to None.
+            bcc (str, optional): coma separated blind carbon copy recipients. Defaults to None.
+            attachments (list, optional): list of attachments. Must be filepaths. Defaults to None.::
 
                 ( filepath1, filepath2, ...)
 
@@ -379,8 +379,8 @@ class Email(CleepRenderer):
             port (int, optional): smtp server port
             login (str, optional): login to connect to custom smtp server
             password (str, optional): password to connect to custom smtp server
-            tls (bool, optional): TLS option. Defaults to False
-            ssl (bool, optional): SSL option. Defaults to False
+            tls (bool, optional): TLS option. Defaults to False.
+            ssl (bool, optional): SSL option. Defaults to False.
             sender (str, optional): email sender
 
         Returns:
