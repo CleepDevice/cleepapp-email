@@ -66,13 +66,6 @@ class Email(CleepRenderer):
             "tls": True,
             "ssl": False,
         },
-        "outlook": {
-            "label": "Outlook",
-            "server": "smtp-mail.outlook.com",
-            "port": 587,
-            "tls": True,
-            "ssl": False,
-        },
     }
 
     def __init__(self, bootstrap, debug_enabled):
@@ -231,10 +224,10 @@ class Email(CleepRenderer):
         try:
             mail = EmailMessage()
             mail["Subject"] = subject
-            mail["From"] = sender or config.get("sender")
+            mail["From"] = sender or config.get("sender") or config.get("login")
             mail["To"] = recipient
             mail.preamble = "You will not see this in a MIME-aware mail reader.\n"
-            mail.add_alternative(f"<html><head></head><body>{content}</body>")
+            mail.set_content(f"<html><head></head><body>{content}</body>", subtype="html")
 
             for attachment in attachments:
                 if not os.path.isfile(attachment):

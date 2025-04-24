@@ -1,12 +1,10 @@
-/**
- * Smtp config directive
- * Handle smtp configuration
- */
-var smtpConfigDirective = function(toast, smtpService, raspiotService) {
+angular
+.module('Cleep')
+.directive('emailConfigComponent', ['toastService', 'emailService', 'cleepService',
+function(toast, emailService, cleepService) {
 
-    var smtpController = ['$scope', function($scope)
-    {
-        var self = this;
+    const emailController = ['$scope', function($scope) {
+        const self = this;
         self.providers = [];
         self.provider = null;
         self.server = '';
@@ -18,18 +16,28 @@ var smtpConfigDirective = function(toast, smtpService, raspiotService) {
         self.sender = '';
         self.recipient = '';
 
+        self.$onInit = function() {
+            cleepService.getModuleConfig('email')
+                .then(function(config) {
+                    self.__loadFromConfig(config);
+                });
+        };
+
         /**
          * Load values from specified config
          */
-        self.__loadFromConfig = function(config)
-        {
-            self.providers = config.providers;
-            for(var i=0; i<self.providers.length; i++) {
-                if(config.provider==self.providers[i].key) {
-                    self.provider = self.providers[i];
-                    break;
+        self.__loadFromConfig = function(config) {
+            const providers = [];
+            for (const provider of config.providers) {
+                providers.push({
+                    label: provider.label,
+                    value: provider.key,
+                });
+                if (config.provider === provider.key) {
+                    self.provider = provider.key
                 }
             }
+            self.providers = providers;
             self.server = config.server;
             self.port = config.port;
             self.login = config.login;
@@ -42,11 +50,10 @@ var smtpConfigDirective = function(toast, smtpService, raspiotService) {
         /**
          * Set config
          */
-        self.setConfig = function()
-        {
-            smtpService.setConfig(self.provider.key, self.server, self.port, self.login, self.password, self.tls, self.ssl, self.sender)
+        self.setConfig = function() {
+            emailService.setConfig(self.provider, self.server, self.port, self.login, self.password, self.tls, self.ssl, self.sender)
                 .then(function(resp) {
-                    return raspiotService.reloadModuleConfig('smtp');
+                    return cleepService.reloadModuleConfig('email');
                 })
                 .then(function(config) {
                     self.__loadFromConfig(config);
@@ -57,38 +64,18 @@ var smtpConfigDirective = function(toast, smtpService, raspiotService) {
         /**
          * Test
          */
-        self.test = function()
-        {
+        self.test = function() {
             toast.loading('Sending test email...');
-            smtpService.test(self.recipient, self.provider.key, self.server, self.port, self.login, self.password, self.tls, self.ssl, self.sender)
+            emailService.test(self.recipient, self.provider.key, self.server, self.port, self.login, self.password, self.tls, self.ssl, self.sender)
                 .then(function(resp) {
                     toast.success('Email sent successfully. Check your mailbox.');
-                });
-        };
-
-        /**
-         * Init controller
-         */
-        self.init = function()
-        {
-            raspiotService.getModuleConfig('smtp')
-                .then(function(config) {
-                    for( var i=0; i<self.providers.length; i++ )
-                    {
-                        if( config.smtp_server===self.providers[i].smtp )
-                        {
-                            self.provider = self.providers[i].key;
-                            break;
-                        }
-                    }
-                    self.__loadFromConfig(config);
                 });
         };
 
         $scope.$watch(function() {
             return self.provider
         }, function(newVal, oldVal) {
-            if(newVal && oldVal && newVal.key!=oldVal.key) {
+            if (newVal !== oldVal) {
                 //erase inputs
                 self.server = '';
                 self.port = '';
@@ -102,19 +89,10 @@ var smtpConfigDirective = function(toast, smtpService, raspiotService) {
 
     }];
 
-    var smtpLink = function(scope, element, attrs, controller) {
-        controller.init();
-    };
-
     return {
-        templateUrl: 'smtp.config.html',
-        scope: true,
-        controller: smtpController,
-        controllerAs: 'smtpCtl',
-        link: smtpLink
+        templateUrl: 'email.config.html',
+        replace: true,
+        controller: emailController,
+        controllerAs: '$ctrl',
     };
-};
-
-var RaspIot = angular.module('RaspIot');
-RaspIot.directive('smtpConfigDirective', ['toastService', 'smtpService', 'raspiotService', smtpConfigDirective])
-
+}]);
