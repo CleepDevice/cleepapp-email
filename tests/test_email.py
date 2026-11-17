@@ -1,8 +1,6 @@
 from cleep.libs.tests import session
 import unittest
 import logging
-import sys
-sys.path.append('../')
 from backend.email import Email
 import os
 import time
